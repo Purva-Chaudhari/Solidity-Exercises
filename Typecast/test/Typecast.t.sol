@@ -16,6 +16,7 @@ contract TypecastTest is Test {
         typecast.typeCast{value: 1 ether}();
 
         bool success;
+        vm.deal(address(this), 591460923342184218035706888008 ether);
 
         assembly {
             mstore(
