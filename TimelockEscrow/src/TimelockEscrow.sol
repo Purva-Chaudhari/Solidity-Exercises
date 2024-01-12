@@ -14,6 +14,9 @@ contract TimelockEscrow {
         seller = msg.sender;
     }
 
+    mapping (address => uint256) time;
+    mapping (address => uint256) balances;
+
     // creates a buy order between msg.sender and seller
     /**
      * escrows msg.value for 3 days which buyer can withdraw at anytime before 3 days but afterwhich only seller can withdraw
@@ -21,6 +24,8 @@ contract TimelockEscrow {
      */
     function createBuyOrder() external payable {
         // your code here
+        time[msg.sender] = block.timestamp;
+        balances[msg.sender] = msg.value;
     }
 
     /**
@@ -28,6 +33,9 @@ contract TimelockEscrow {
      */
     function sellerWithdraw(address buyer) external {
         // your code here
+        require (block.timestamp >= time[buyer]+3, "Wait for 3 days");
+        (bool ok, ) = seller.call{value: address(this).balance}("");
+        require(ok);
     }
 
     /**
@@ -35,10 +43,15 @@ contract TimelockEscrow {
      */
     function buyerWithdraw() external {
         // your code here
+        require (block.timestamp < time[msg.sender] + 3);
+        (bool ok,) = msg.sender.call{value: address(this).balance}("");
+        require(ok);
     }
 
     // returns the escrowed amount of @param buyer
     function buyerDeposit(address buyer) external view returns (uint256) {
         // your code here
+        return balances[buyer];
+
     }
 }

@@ -13,6 +13,8 @@ contract SelfDestroyer {
 
     function destroy(address taker) external {
         // your code here
+        address payable _addr = payable(taker);
+        selfdestruct(_addr);
     }
 
     function getBalance() public view returns (uint256 balance) {

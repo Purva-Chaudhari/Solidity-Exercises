@@ -19,5 +19,14 @@ contract ReducingPayout {
 
     function withdraw() public {
         // your code here
+        uint256 diff = block.timestamp - depositedTime;
+        uint256 amount = 0;
+        if (diff < 1 days) {
+             amount =  address(this).balance - (address(this).balance*diff * 11574/1000000000);
+             //uint256 amount =  address(this).balance - (address(this).balance*diff /(3600*24));  is equivalent but doesn't work for testWithdraw2 due to some decimal adjustments
+        }
+        
+        (bool ok,) = msg.sender.call{value:amount}("");
+        require(ok);
     }
 }

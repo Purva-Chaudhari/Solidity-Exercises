@@ -2,6 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
+import "forge-std/console.sol";
 import "../src/CodeSize.sol";
 
 contract CodeSizeTest is Test {
@@ -12,6 +13,7 @@ contract CodeSizeTest is Test {
     }
 
     function testCodeSize() public {
+        console.log("Code size : ", address(codeSize).code.length);
         assertEq(
             address(codeSize).code.length > 1024,
             true,
